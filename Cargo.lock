@@ -870,10 +870,14 @@ dependencies = [
  "duck-tee-attestation",
  "duck-tricky-store",
  "duck-zram",
+ "hex",
+ "rcgen",
  "serde",
  "serde_json",
+ "sha2",
  "tempfile",
  "tokio",
+ "x509-cert",
 ]
 
 [[package]]

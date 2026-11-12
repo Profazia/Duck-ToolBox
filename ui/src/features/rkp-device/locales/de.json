@@ -81,6 +81,32 @@
     "includeFingerprintHint": "Der Fingerabdruck muss denselben Firmware-Build wie der VBMeta-Digest der TA-Anfrage bezeichnen. Auch bei deaktivierter Option wird er beim Challenge-Abruf gesendet.",
     "fingerprintHint": "Leer lassen, um den Gerätefingerabdruck bei der Signaturanfrage zu lesen. Eine explizite Angabe gilt für den Challenge-Abruf und die CSR-Metadaten."
   },
+  "renewal": {
+    "title": "Automatische Erneuerung",
+    "description": "Fordert eine neue Keybox an und installiert sie einen Tag bevor ihr erstes Zertifikat abläuft.",
+    "scheduled": "Geplant",
+    "retrying": "Neuer Versuch",
+    "superseded": "Angehalten",
+    "supersededTitle": "Eine andere Keybox ist installiert",
+    "supersededBody": "Die Erneuerung wurde angehalten, damit sie die inzwischen installierte Keybox nicht ersetzt. Stelle eine neue Keybox aus, installiere sie und aktiviere dann die Erneuerung dafür.",
+    "enable": "Automatisch erneuern",
+    "trackThis": "Stattdessen diese Keybox verfolgen",
+    "disable": "Ausschalten",
+    "renewNow": "Jetzt erneuern",
+    "enabled": "Automatische Erneuerung ist an",
+    "disabled": "Automatische Erneuerung ist aus",
+    "renewed": "Keybox erneuert und installiert",
+    "confirmTitle": "Diese Keybox automatisch erneuern?",
+    "confirmBody": "Einen Tag bevor das erste Zertifikat abläuft, führt Duck ToolBox dieselbe Ausstellung auf dem KeyMint TA dieses Geräts aus, sendet sie an Google und installiert die neue Keybox über den Tricky-Store-Manager, ohne erneut zu fragen. Das funktioniert nur auf manchen Geräten, und es können nur RKP-Zertifikate ausgestellt werden. Wenn du eine andere Keybox installierst, endet die Erneuerung. Fortfahren?",
+    "installFirst": "Installiere diese Keybox zuerst über den Tricky-Store-Manager.",
+    "issueFirst": "Stelle eine Keybox aus und installiere sie, um die automatische Erneuerung einzuschalten.",
+    "expires": "Läuft ab",
+    "nextAttempt": "Nächster Versuch",
+    "lastRenewed": "Zuletzt erneuert",
+    "lastError": "Letzter Fehler",
+    "runDir": "Ausführungsordner",
+    "never": "Noch nicht"
+  },
   "confirm": {
     "title": "Eine Anfrage an den KeyMint TA senden?",
     "body": "Dies führt RKP (V1 / V2) auf der KeyMint-Trusted-App des Geräts aus und sendet das Ergebnis an Google. Es funktioniert nur auf manchen Geräten und stellt nur RKP-Zertifikate aus. Die exportierten Dateien enthalten einen privaten Schlüssel; bewahre sie sicher auf. Fortfahren?"
@@ -100,6 +126,13 @@
     "device_not_registered": "Der RKP-Server kennt dieses Gerät nicht.",
     "rkp_client_error": "Der RKP-Server hat die Anfrage abgelehnt.",
     "rkp_server_error": "Beim RKP-Server ist ein Fehler aufgetreten.",
-    "all_methods_failed": "Alle verfügbaren Ausstellungsmethoden sind fehlgeschlagen. Prüfen Sie die Fehler der einzelnen Versuche."
+    "all_methods_failed": "Alle verfügbaren Ausstellungsmethoden sind fehlgeschlagen. Prüfen Sie die Fehler der einzelnen Versuche.",
+    "keybox_not_installed": "Installiere diese Keybox über den Tricky-Store-Manager, bevor du die Erneuerung einschaltest.",
+    "keybox_changed": "Eine andere Keybox ist installiert, daher wurde die Erneuerung angehalten.",
+    "renewal_busy": "Eine andere Erneuerung läuft. Versuche es gleich noch einmal.",
+    "renewal_disabled": "Die automatische Erneuerung ist nicht eingeschaltet.",
+    "keystore_unavailable": "Das Keystore-Modul oder seine Keybox konnte nicht gelesen werden.",
+    "keybox_install_failed": "Die erneuerte Keybox konnte nicht installiert werden.",
+    "invalid_run": "Das ist kein Ergebnis des Geräte-RKP-Ausstellers."
   }
 }

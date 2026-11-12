@@ -81,6 +81,32 @@
     "includeFingerprintHint": "The fingerprint should identify the same firmware build as the VBMeta digest in the TA request. Disabling this does not remove the fingerprint from the challenge request.",
     "fingerprintHint": "Leave blank to read the device fingerprint at issuance time. An override applies to both challenge retrieval and CSR metadata."
   },
+  "renewal": {
+    "title": "Automatic renewal",
+    "description": "Requests and installs a new keybox one day before the earliest certificate in it expires.",
+    "scheduled": "Scheduled",
+    "retrying": "Retrying",
+    "superseded": "Stopped",
+    "supersededTitle": "A different keybox is installed",
+    "supersededBody": "Renewal stopped so it would not replace the keybox installed since. Issue and install a new keybox, then turn renewal on for it.",
+    "enable": "Renew automatically",
+    "trackThis": "Track this keybox instead",
+    "disable": "Turn off",
+    "renewNow": "Renew now",
+    "enabled": "Automatic renewal is on",
+    "disabled": "Automatic renewal is off",
+    "renewed": "Keybox renewed and installed",
+    "confirmTitle": "Renew this keybox automatically?",
+    "confirmBody": "One day before the earliest certificate expires, Duck ToolBox runs the same issuance on this device's KeyMint TA, submits it to Google and installs the new keybox through the Tricky Store manager, without asking again. It only works on some devices and only RKP certificates can be issued. If you install a different keybox, renewal stops. Continue?",
+    "installFirst": "Install this keybox through the Tricky Store manager first.",
+    "issueFirst": "Issue and install a keybox to turn on automatic renewal.",
+    "expires": "Expires",
+    "nextAttempt": "Next attempt",
+    "lastRenewed": "Last renewed",
+    "lastError": "Last error",
+    "runDir": "Run directory",
+    "never": "Not yet"
+  },
   "confirm": {
     "title": "Send a request to the KeyMint TA?",
     "body": "This runs RKP (V1 / V2) on the device's KeyMint trusted app and submits the result to Google. It only works on some devices and only RKP certificates can be issued. The exported files contain a private key; keep them private. Continue?"
@@ -100,6 +126,13 @@
     "device_not_registered": "The RKP server does not recognise this device.",
     "rkp_client_error": "The RKP server rejected the request.",
     "rkp_server_error": "The RKP server failed.",
-    "all_methods_failed": "All available issuance methods failed. Review the errors for each attempt."
+    "all_methods_failed": "All available issuance methods failed. Review the errors for each attempt.",
+    "keybox_not_installed": "Install this keybox through the Tricky Store manager before turning on renewal.",
+    "keybox_changed": "A different keybox is installed, so renewal stopped.",
+    "renewal_busy": "Another renewal is in progress. Try again shortly.",
+    "renewal_disabled": "Automatic renewal is not on.",
+    "keystore_unavailable": "The keystore module or its keybox could not be read.",
+    "keybox_install_failed": "The renewed keybox could not be installed.",
+    "invalid_run": "This is not a Device RKP Issuer result."
   }
 }

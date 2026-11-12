@@ -49,6 +49,34 @@ pub fn status(sysroot: &Sysroot, device_path: &str) -> KeyboxStatus {
     }
 }
 
+/// The active backend's keybox, without the package scan `status` performs, so a boot
+/// task can afford to check it repeatedly.
+#[derive(Debug, Clone)]
+pub struct ActiveKeybox {
+    pub backend: Backend,
+    pub device_path: String,
+    /// Current contents; `None` when no keybox is installed.
+    pub content: Option<Vec<u8>>,
+}
+
+pub fn active(ctx: &Context) -> Result<ActiveKeybox> {
+    let (detection, adapter) = active_adapter(&ctx.sysroot)?;
+    let device_path = adapter.keybox_path(&ctx.sysroot);
+    let host_path = ctx.sysroot.path(&device_path);
+    let content = match fs::read(&host_path) {
+        Ok(bytes) => Some(bytes),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => None,
+        Err(error) => {
+            return Err(anyhow::Error::new(error).context(format!("read {}", host_path.display())));
+        }
+    };
+    Ok(ActiveKeybox {
+        backend: detection.backend,
+        device_path,
+        content,
+    })
+}
+
 pub fn install(ctx: &Context, content: &str, source: &str) -> Result<KeyboxInstallData> {
     let (detection, adapter) = active_adapter(&ctx.sysroot)?;
     let cleaned = validate::clean(content)?;

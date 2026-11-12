@@ -81,6 +81,32 @@
     "includeFingerprintHint": "Sidik jari harus merujuk ke build firmware yang sama dengan digest VBMeta dalam permintaan TA. Saat dinonaktifkan, sidik jari tetap dikirim saat mengambil challenge.",
     "fingerprintHint": "Kosongkan untuk membaca sidik jari perangkat saat penandatanganan. Nilai manual digunakan untuk pengambilan challenge dan metadata CSR."
   },
+  "renewal": {
+    "title": "Perpanjangan otomatis",
+    "description": "Meminta dan memasang keybox baru sehari sebelum sertifikat paling awal di dalamnya kedaluwarsa.",
+    "scheduled": "Terjadwal",
+    "retrying": "Mencoba lagi",
+    "superseded": "Berhenti",
+    "supersededTitle": "Keybox lain terpasang",
+    "supersededBody": "Perpanjangan berhenti agar tidak menggantikan keybox yang dipasang setelahnya. Terbitkan dan pasang keybox baru, lalu aktifkan perpanjangan untuknya.",
+    "enable": "Perpanjang otomatis",
+    "trackThis": "Lacak keybox ini sebagai gantinya",
+    "disable": "Matikan",
+    "renewNow": "Perpanjang sekarang",
+    "enabled": "Perpanjangan otomatis aktif",
+    "disabled": "Perpanjangan otomatis mati",
+    "renewed": "Keybox diperpanjang dan dipasang",
+    "confirmTitle": "Perpanjang keybox ini secara otomatis?",
+    "confirmBody": "Sehari sebelum sertifikat paling awal kedaluwarsa, Duck ToolBox menjalankan penerbitan yang sama di KeyMint TA perangkat ini, mengirimkannya ke Google, dan memasang keybox baru melalui pengelola Tricky Store tanpa bertanya lagi. Hanya berfungsi di sebagian perangkat dan hanya sertifikat RKP yang dapat diterbitkan. Jika Anda memasang keybox lain, perpanjangan berhenti. Lanjutkan?",
+    "installFirst": "Pasang keybox ini melalui pengelola Tricky Store terlebih dahulu.",
+    "issueFirst": "Terbitkan dan pasang keybox untuk mengaktifkan perpanjangan otomatis.",
+    "expires": "Kedaluwarsa",
+    "nextAttempt": "Percobaan berikutnya",
+    "lastRenewed": "Terakhir diperpanjang",
+    "lastError": "Galat terakhir",
+    "runDir": "Direktori proses",
+    "never": "Belum ada"
+  },
   "confirm": {
     "title": "Kirim permintaan ke KeyMint TA?",
     "body": "Ini menjalankan RKP (V1 / V2) pada aplikasi tepercaya KeyMint di perangkat lalu mengirim hasilnya ke Google. Hanya berfungsi di sebagian perangkat dan hanya menerbitkan sertifikat RKP. Berkas yang diekspor berisi kunci privat; simpan dengan aman. Lanjutkan?"
@@ -100,6 +126,13 @@
     "device_not_registered": "Server RKP tidak mengenali perangkat ini.",
     "rkp_client_error": "Server RKP menolak permintaan.",
     "rkp_server_error": "Server RKP mengalami error.",
-    "all_methods_failed": "Semua metode penerbitan yang tersedia gagal. Periksa kesalahan setiap percobaan."
+    "all_methods_failed": "Semua metode penerbitan yang tersedia gagal. Periksa kesalahan setiap percobaan.",
+    "keybox_not_installed": "Pasang keybox ini melalui pengelola Tricky Store sebelum mengaktifkan perpanjangan.",
+    "keybox_changed": "Keybox lain terpasang, jadi perpanjangan berhenti.",
+    "renewal_busy": "Perpanjangan lain sedang berjalan. Coba lagi sebentar lagi.",
+    "renewal_disabled": "Perpanjangan otomatis belum aktif.",
+    "keystore_unavailable": "Modul keystore atau keybox-nya tidak dapat dibaca.",
+    "keybox_install_failed": "Keybox yang diperpanjang tidak dapat dipasang.",
+    "invalid_run": "Ini bukan hasil Penerbit RKP Perangkat."
   }
 }

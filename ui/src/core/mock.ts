@@ -16,11 +16,16 @@ export type MockHandler = (
   input: unknown,
 ) => unknown
 
+export interface MockFeature {
+  id: string
+  contract: number
+}
+
 export interface MockModule {
   /** Keyed by dotted command, e.g. `tricky-store.keybox.set-aosp`. */
   handlers: Record<string, MockHandler>
-  /** Backend feature id and contract this mock stands in for. */
-  feature?: { id: string; contract: number }
+  /** Backend feature ids and contracts this mock stands in for. */
+  feature?: MockFeature | MockFeature[]
 }
 
 /** A failure the mock reports as an error envelope, like a real `duckd` error code. */

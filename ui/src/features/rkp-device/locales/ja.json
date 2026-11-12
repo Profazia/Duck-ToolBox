@@ -81,6 +81,32 @@
     "includeFingerprintHint": "指紋は TA リクエストの VBMeta ダイジェストと同じファームウェアビルドを示す必要があります。無効時も challenge の取得時には指紋を送信します。",
     "fingerprintHint": "空欄なら署名時に端末の指紋を読み取ります。指定値は challenge の取得と CSR メタデータの両方に適用します。"
   },
+  "renewal": {
+    "title": "自動更新",
+    "description": "keybox 内で最も早く期限切れになる証明書の 1 日前に、新しい keybox を取得してインストールします。",
+    "scheduled": "予定済み",
+    "retrying": "再試行中",
+    "superseded": "停止",
+    "supersededTitle": "別の keybox がインストールされています",
+    "supersededBody": "後からインストールされた keybox を置き換えないよう、更新を停止しました。新しい keybox を発行してインストールし、その keybox で更新をオンにしてください。",
+    "enable": "自動的に更新",
+    "trackThis": "この keybox を追跡する",
+    "disable": "オフにする",
+    "renewNow": "今すぐ更新",
+    "enabled": "自動更新をオンにしました",
+    "disabled": "自動更新をオフにしました",
+    "renewed": "keybox を更新してインストールしました",
+    "confirmTitle": "この keybox を自動的に更新しますか？",
+    "confirmBody": "最も早い証明書の期限切れの 1 日前に、Duck ToolBox はこのデバイスの KeyMint TA で同じ発行を実行して Google に送信し、新しい keybox を Tricky Store マネージャーでインストールします。改めて確認はしません。一部のデバイスでのみ動作し、発行できるのは RKP 証明書のみです。別の keybox をインストールすると更新は停止します。続行しますか？",
+    "installFirst": "先に Tricky Store マネージャーでこの keybox をインストールしてください。",
+    "issueFirst": "keybox を発行してインストールすると、自動更新をオンにできます。",
+    "expires": "有効期限",
+    "nextAttempt": "次回の試行",
+    "lastRenewed": "前回の更新",
+    "lastError": "前回のエラー",
+    "runDir": "実行ディレクトリ",
+    "never": "まだありません"
+  },
   "confirm": {
     "title": "KeyMint TA にリクエストを送信しますか？",
     "body": "この端末の KeyMint トラステッドアプリで RKP (V1 / V2) を実行し、結果を Google に送信します。対応デバイスは一部だけで、発行できるのは RKP 証明書のみです。エクスポートしたファイルには秘密鍵が含まれるため、厳重に管理してください。続行しますか？"
@@ -100,6 +126,13 @@
     "device_not_registered": "このデバイスは RKP サーバーに認識されていません。",
     "rkp_client_error": "RKP サーバーがリクエストを拒否しました。",
     "rkp_server_error": "RKP サーバーでエラーが発生しました。",
-    "all_methods_failed": "利用可能なすべての発行方法が失敗しました。各試行のエラーを確認してください。"
+    "all_methods_failed": "利用可能なすべての発行方法が失敗しました。各試行のエラーを確認してください。",
+    "keybox_not_installed": "更新をオンにする前に、Tricky Store マネージャーでこの keybox をインストールしてください。",
+    "keybox_changed": "別の keybox がインストールされたため、更新を停止しました。",
+    "renewal_busy": "別の更新を実行中です。しばらくしてから再試行してください。",
+    "renewal_disabled": "自動更新はオンになっていません。",
+    "keystore_unavailable": "キーストアモジュールまたはその keybox を読み取れませんでした。",
+    "keybox_install_failed": "更新した keybox をインストールできませんでした。",
+    "invalid_run": "これは Device RKP Issuer の結果ではありません。"
   }
 }

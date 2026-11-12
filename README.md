@@ -128,6 +128,22 @@ that edition's local profiles and output files, including exported keyboxes.
     still need to work on the device; prerequisite checks alone cannot confirm them.
   - The exported keybox contains a software-generated private key. Output directories
     are private, and both the keybox and the private key are saved with mode `0600`.
+  - **Automatic renewal** is opt-in for one keybox at a time. After you install an issued
+    keybox through the Tricky Store manager, turn it on from the same page. One day before
+    the earliest certificate in the keybox expires, the module repeats the same issuance
+    (protocol, fingerprint policy and override) and installs the new keybox. Renewal never
+    asks again, so turning it on requires the same acknowledgement as a manual request.
+  - While renewal is on, `rkp-renewal.sh` checks every 15 minutes of awake time. Enabling
+    starts it, and after a reboot it starts 5 minutes after boot. It exits when renewal
+    is turned off or stops, or when the module is disabled. Without a saved plan nothing
+    runs in the background and renewal writes no files.
+  - A check that has nothing to do is not written to the command log. A failed renewal
+    keeps the current keybox and retries after 1 hour, doubling up to 24 hours.
+  - Renewal only replaces the keybox it tracks. When the keystore holds anything else,
+    including a keybox installed while a renewal was in progress, renewal stops and the
+    WebUI says so. Each renewal deletes the run directory of the previous renewal, so
+    only the current renewed keybox and the run you issued yourself keep private keys.
+    Turning renewal off removes all of its state (`var/rkp-renewal`) and keeps keyboxes.
   - Only works on some devices, and only RKP certificates can be issued. Both are stated in
     a dialog before the tool opens and again before a request is sent; the backend refuses
     to run without an explicit acknowledgement.
@@ -211,7 +227,8 @@ crates/
   duck-system/        Module lifecycle, updates.
   duck-kernel-modules/ Linux kernel inventory, ELF inspection and isolated runtime operations.
   duck-zram/          ZRAM inventory, swap configuration and opt-in boot profiles
-  duckd/              The binary: builds its CLI from the compiled-in features.
+  duckd/              The binary: builds its CLI from the compiled-in features, plus
+                      compositions such as automatic RKP keybox renewal.
 xtask/                Repository checks (`cargo xtask line-limit`).
 ui/src/
   app/                Shell: router, app bar, home and settings; discovers features.
@@ -268,7 +285,7 @@ What keeps it modular and resistant to breaking changes:
 | `customize.sh` | Checks the root manager, ABI and API level; prepares `/data/adb/duck-toolbox`; normalizes the boot hash; drops `action.sh` where the manager has a WebUI button; requests hot install from metamodules that support it. |
 | `post-fs-data.sh` / `late-load.sh` | Early pass of the sensitive-prop handler (`resetprop -n`, never `setprop`). KernelSU's late-load mode runs `late-load.sh` instead of `post-fs-data.sh`. |
 | `service.sh` | Repairs the runtime directory. On Magisk, which has no boot-completed stage, it waits for boot and runs `boot-completed.sh`. |
-| `boot-completed.sh` | Late prop pass, keystore-module entry links, auto-add of new apps, the module description (KernelSU temporary `override.description`), and the TSupport-Advance flag. |
+| `boot-completed.sh` | Late prop pass, keystore-module entry links, auto-add of new apps, the module description (KernelSU temporary `override.description`), the RKP keybox renewal check (only when renewal is on), and the TSupport-Advance flag. |
 | `action.sh` (Magisk) | Opens the WebUI in KSUWebUIStandalone or WebUI X, installing KSUWebUIStandalone if neither is present. |
 | `uninstall.sh` | Removes entry links, flags, the boot hash and `/data/adb/duck-toolbox`. |
 
@@ -314,6 +331,8 @@ prerelease can be promoted by clearing its prerelease flag.
 duckd features | describe
 duckd rkp profile show|save|clear|detect
 duckd rkp info | provision | keybox | verify <file>
+duckd rkp-device status | provision [--protocol auto|v1|v2|v1-native] --acknowledge-limitations
+duckd rkp-renewal status | enable --stdin-json | disable | tick [--force]
 duckd tee-attestation status
 duckd tee-attestation keybox <capture> [--format auto|xml|pem] [--export]
 duckd tee-attestation seed <capture> --csr <csr.cbor> [--format raw|hex] [--derivation ed25519-seed|p256-seed|p256-scalar] [--offset <decimal>] [--export]
@@ -336,6 +355,11 @@ duckd zram forget <zramN>
 ```
 
 Commands that take input read JSON from stdin with `--stdin-json`.
+
+Renewal is enabled for an installed Device RKP Issuer result with
+`{"run_dir":"<artifacts.run_dir>","protocol":"auto","include_fingerprint":false,"fingerprint":null,"acknowledge_limitations":true}`.
+`tick` renews only when due and reports `disabled`, `stopped`, `superseded`, `waiting`,
+`busy` or `renewed`; `tick --force` renews now and reports any reason it could not as an error.
 
 Kernel module loading accepts
 `{"path":"/data/local/tmp/example.ko","sha256":"<digest from inspect>","parameters":"debug=1","confirmed":true}`.

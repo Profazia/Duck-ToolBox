@@ -2,6 +2,7 @@ import type { MockModule } from "@/core/mock"
 import { MockFailure } from "@/core/mock"
 
 import type { DeviceStatus, Protocol, Provision } from "./api"
+import type { RenewalStatus } from "./renewal"
 
 const OUT = "/data/adb/duck-toolbox/var/outputs/rkp-device-1750000000000"
 
@@ -103,9 +104,101 @@ function deviceStatus(): DeviceStatus {
   return status
 }
 
+const DAY = 24 * 60 * 60
+type Plan = NonNullable<RenewalStatus["plan"]>
+let renewalPlan: Plan | null = null
+
+function renewalStatus(): RenewalStatus {
+  const state = !renewalPlan
+    ? "off"
+    : renewalPlan.superseded_at_unix !== null
+      ? "superseded"
+      : renewalPlan.consecutive_failures > 0
+        ? "retrying"
+        : "scheduled"
+  return { state, renew_before_secs: DAY, plan: renewalPlan }
+}
+
+/** A run whose leaf certificate expires `days` from now, as the backend would track it. */
+function trackedPlan(runDir: string, input: Record<string, unknown>, days = 30): Plan {
+  const now = Math.floor(Date.now() / 1000)
+  const notAfter = now + days * DAY
+  return {
+    api: 1,
+    protocol: (input.protocol as Plan["protocol"] | undefined) ?? "auto",
+    include_fingerprint: input.include_fingerprint === true,
+    fingerprint: typeof input.fingerprint === "string" ? input.fingerprint : null,
+    run_dir: runDir,
+    keybox_sha256: "4f1c".repeat(16),
+    not_after_unix: notAfter,
+    renew_at_unix: notAfter - DAY,
+    next_attempt_unix: notAfter - DAY,
+    enabled_at_unix: now,
+    last_renewed_at_unix: null,
+    last_attempt: null,
+    consecutive_failures: 0,
+    superseded_at_unix: null,
+  }
+}
+
+// `?renewal=scheduled|retrying|superseded` starts with a tracked keybox.
+const initialRenewal = new URLSearchParams(location.search).get("renewal")
+if (initialRenewal) {
+  renewalPlan = trackedPlan(`${OUT}-earlier`, {}, 12)
+  if (initialRenewal === "retrying") {
+    renewalPlan.consecutive_failures = 2
+    renewalPlan.last_attempt = {
+      at_unix: Math.floor(Date.now() / 1000) - 3600,
+      ok: false,
+      code: "rkp_server_error",
+      message: "The RKP server returned HTTP 503",
+    }
+  } else if (initialRenewal === "superseded") {
+    renewalPlan.superseded_at_unix = Math.floor(Date.now() / 1000)
+  }
+}
+
 const mock: MockModule = {
-  feature: { id: "rkp-device", contract: 7 },
+  feature: [
+    { id: "rkp-device", contract: 7 },
+    { id: "rkp-renewal", contract: 1 },
+  ],
   handlers: {
+    "rkp-renewal.status": renewalStatus,
+    "rkp-renewal.enable": (_args, _flags, input) => {
+      const request = (input ?? {}) as Record<string, unknown>
+      if (request.acknowledge_limitations !== true)
+        throw new MockFailure("acknowledgement_required", "The limitations were not acknowledged")
+      if (typeof request.run_dir !== "string" || !request.run_dir.startsWith(OUT))
+        throw new MockFailure("invalid_run", "This is not a Device RKP Issuer run directory")
+      renewalPlan = trackedPlan(request.run_dir, request)
+      return renewalStatus()
+    },
+    "rkp-renewal.disable": () => {
+      renewalPlan = null
+      return renewalStatus()
+    },
+    "rkp-renewal.tick": (_args, flags) => {
+      if (!renewalPlan) {
+        if (flags.force === true)
+          throw new MockFailure("renewal_disabled", "automatic renewal is not enabled")
+        return { action: "disabled", status: renewalStatus() }
+      }
+      if (renewalPlan.superseded_at_unix !== null) {
+        if (flags.force === true)
+          throw new MockFailure("keybox_changed", "the installed keybox changed")
+        return { action: "stopped", status: renewalStatus() }
+      }
+      if (flags.force !== true) return { action: "waiting", status: renewalStatus() }
+      const now = Math.floor(Date.now() / 1000)
+      renewalPlan = {
+        ...trackedPlan(`${OUT}-renewed`, renewalPlan),
+        enabled_at_unix: renewalPlan.enabled_at_unix,
+        last_renewed_at_unix: now,
+        last_attempt: { at_unix: now, ok: true, code: null, message: null },
+      }
+      return { action: "renewed", status: renewalStatus() }
+    },
     "rkp-device.status": deviceStatus,
     "rkp-device.provision": (_args, flags) => {
       const protocol = flags.protocol ?? "auto"

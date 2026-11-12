@@ -81,6 +81,32 @@
     "includeFingerprintHint": "지문은 TA 요청의 VBMeta 다이제스트와 같은 펌웨어 빌드여야 합니다. 꺼도 challenge 요청에는 지문을 전송합니다.",
     "fingerprintHint": "비워 두면 서명 시 기기 지문을 읽습니다. 직접 지정한 값은 challenge 요청과 CSR 메타데이터에 모두 적용됩니다."
   },
+  "renewal": {
+    "title": "자동 갱신",
+    "description": "keybox에서 가장 먼저 만료되는 인증서의 만료 하루 전에 새 keybox를 요청하고 설치합니다.",
+    "scheduled": "예약됨",
+    "retrying": "재시도 중",
+    "superseded": "중지됨",
+    "supersededTitle": "다른 keybox가 설치되어 있습니다",
+    "supersededBody": "이후에 설치된 keybox를 덮어쓰지 않도록 갱신을 중지했습니다. 새 keybox를 발급하고 설치한 뒤 해당 keybox에 대해 갱신을 켜세요.",
+    "enable": "자동으로 갱신",
+    "trackThis": "대신 이 keybox 추적",
+    "disable": "끄기",
+    "renewNow": "지금 갱신",
+    "enabled": "자동 갱신을 켰습니다",
+    "disabled": "자동 갱신을 껐습니다",
+    "renewed": "keybox를 갱신하고 설치했습니다",
+    "confirmTitle": "이 keybox를 자동으로 갱신할까요?",
+    "confirmBody": "가장 먼저 만료되는 인증서의 만료 하루 전에 Duck ToolBox가 이 기기의 KeyMint TA에서 같은 발급을 실행해 Google에 제출하고, 새 keybox를 Tricky Store 관리자로 설치합니다. 다시 묻지 않습니다. 일부 기기에서만 작동하며 RKP 인증서만 발급할 수 있습니다. 다른 keybox를 설치하면 갱신이 중지됩니다. 계속할까요?",
+    "installFirst": "먼저 Tricky Store 관리자로 이 keybox를 설치하세요.",
+    "issueFirst": "keybox를 발급하고 설치하면 자동 갱신을 켤 수 있습니다.",
+    "expires": "만료",
+    "nextAttempt": "다음 시도",
+    "lastRenewed": "마지막 갱신",
+    "lastError": "마지막 오류",
+    "runDir": "실행 디렉터리",
+    "never": "아직 없음"
+  },
   "confirm": {
     "title": "KeyMint TA로 요청을 보낼까요?",
     "body": "이 기기의 KeyMint 트러스트 앱에서 RKP (V1 / V2)를 실행하고 결과를 Google에 제출합니다. 일부 기기에서만 동작하며 RKP 인증서만 발급할 수 있습니다. 내보낸 파일에는 개인 키가 포함되므로 안전하게 보관하세요. 계속할까요?"
@@ -100,6 +126,13 @@
     "device_not_registered": "RKP 서버에서 이 기기를 인식하지 못합니다.",
     "rkp_client_error": "RKP 서버에서 요청을 거부했습니다.",
     "rkp_server_error": "RKP 서버에 오류가 발생했습니다.",
-    "all_methods_failed": "사용 가능한 모든 발급 방식이 실패했습니다. 각 시도의 오류를 확인하세요."
+    "all_methods_failed": "사용 가능한 모든 발급 방식이 실패했습니다. 각 시도의 오류를 확인하세요.",
+    "keybox_not_installed": "갱신을 켜기 전에 Tricky Store 관리자로 이 keybox를 설치하세요.",
+    "keybox_changed": "다른 keybox가 설치되어 갱신이 중지되었습니다.",
+    "renewal_busy": "다른 갱신이 진행 중입니다. 잠시 후 다시 시도하세요.",
+    "renewal_disabled": "자동 갱신이 켜져 있지 않습니다.",
+    "keystore_unavailable": "키스토어 모듈 또는 해당 keybox를 읽을 수 없습니다.",
+    "keybox_install_failed": "갱신된 keybox를 설치할 수 없습니다.",
+    "invalid_run": "Device RKP Issuer 결과가 아닙니다."
   }
 }

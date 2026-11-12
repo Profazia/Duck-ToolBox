@@ -81,6 +81,32 @@
     "includeFingerprintHint": "La huella debe corresponder a la misma compilación del firmware que el resumen VBMeta de la solicitud del TA. Al desactivarlo, la solicitud de challenge sigue enviando la huella.",
     "fingerprintHint": "Déjalo vacío para leer la huella del dispositivo al solicitar la firma. Un valor manual se aplica al challenge y a los metadatos del CSR."
   },
+  "renewal": {
+    "title": "Renovación automática",
+    "description": "Solicita e instala un keybox nuevo un día antes de que caduque su primer certificado.",
+    "scheduled": "Programada",
+    "retrying": "Reintentando",
+    "superseded": "Detenida",
+    "supersededTitle": "Hay otro keybox instalado",
+    "supersededBody": "La renovación se detuvo para no sustituir el keybox instalado después. Emite e instala un keybox nuevo y activa la renovación para él.",
+    "enable": "Renovar automáticamente",
+    "trackThis": "Seguir este keybox",
+    "disable": "Desactivar",
+    "renewNow": "Renovar ahora",
+    "enabled": "Renovación automática activada",
+    "disabled": "Renovación automática desactivada",
+    "renewed": "Keybox renovado e instalado",
+    "confirmTitle": "¿Renovar este keybox automáticamente?",
+    "confirmBody": "Un día antes de que caduque el primer certificado, Duck ToolBox repite la misma emisión en el KeyMint TA de este dispositivo, la envía a Google e instala el keybox nuevo mediante el gestor de Tricky Store, sin volver a preguntar. Solo funciona en algunos dispositivos y solo se pueden emitir certificados RKP. Si instalas otro keybox, la renovación se detiene. ¿Continuar?",
+    "installFirst": "Instala primero este keybox mediante el gestor de Tricky Store.",
+    "issueFirst": "Emite e instala un keybox para activar la renovación automática.",
+    "expires": "Caduca",
+    "nextAttempt": "Próximo intento",
+    "lastRenewed": "Última renovación",
+    "lastError": "Último error",
+    "runDir": "Directorio de ejecución",
+    "never": "Aún no"
+  },
   "confirm": {
     "title": "¿Enviar una petición al KeyMint TA?",
     "body": "Esto ejecuta RKP (V1 / V2) en la app de confianza KeyMint del dispositivo y envía el resultado a Google. Solo funciona en algunos dispositivos y solo emite certificados RKP. Los archivos exportados contienen una clave privada; guárdalos de forma segura. ¿Continuar?"
@@ -100,6 +126,13 @@
     "device_not_registered": "El servidor RKP no reconoce este dispositivo.",
     "rkp_client_error": "El servidor RKP ha rechazado la solicitud.",
     "rkp_server_error": "Se ha producido un error en el servidor RKP.",
-    "all_methods_failed": "Todos los métodos disponibles han fallado. Revisa los errores de cada intento."
+    "all_methods_failed": "Todos los métodos disponibles han fallado. Revisa los errores de cada intento.",
+    "keybox_not_installed": "Instala este keybox mediante el gestor de Tricky Store antes de activar la renovación.",
+    "keybox_changed": "Hay otro keybox instalado, así que la renovación se detuvo.",
+    "renewal_busy": "Hay otra renovación en curso. Inténtalo de nuevo en breve.",
+    "renewal_disabled": "La renovación automática no está activada.",
+    "keystore_unavailable": "No se pudo leer el módulo de almacén de claves ni su keybox.",
+    "keybox_install_failed": "No se pudo instalar el keybox renovado.",
+    "invalid_run": "Esto no es un resultado del emisor RKP del dispositivo."
   }
 }

@@ -81,6 +81,32 @@
     "includeFingerprintHint": "Dấu vân tay phải thuộc cùng bản dựng phần sụn với mã băm VBMeta trong yêu cầu TA. Khi tắt, yêu cầu lấy challenge vẫn gửi dấu vân tay.",
     "fingerprintHint": "Để trống để đọc dấu vân tay thiết bị khi ký. Giá trị nhập thủ công dùng cho cả yêu cầu lấy challenge và siêu dữ liệu CSR."
   },
+  "renewal": {
+    "title": "Tự động gia hạn",
+    "description": "Yêu cầu và cài keybox mới một ngày trước khi chứng chỉ sớm hết hạn nhất trong đó hết hạn.",
+    "scheduled": "Đã lên lịch",
+    "retrying": "Đang thử lại",
+    "superseded": "Đã dừng",
+    "supersededTitle": "Đã cài một keybox khác",
+    "supersededBody": "Gia hạn đã dừng để không thay thế keybox được cài sau đó. Hãy phát và cài keybox mới, rồi bật gia hạn cho keybox đó.",
+    "enable": "Tự động gia hạn",
+    "trackThis": "Theo dõi keybox này thay thế",
+    "disable": "Tắt",
+    "renewNow": "Gia hạn ngay",
+    "enabled": "Đã bật tự động gia hạn",
+    "disabled": "Đã tắt tự động gia hạn",
+    "renewed": "Đã gia hạn và cài keybox",
+    "confirmTitle": "Tự động gia hạn keybox này?",
+    "confirmBody": "Một ngày trước khi chứng chỉ sớm nhất hết hạn, Duck ToolBox chạy lại cùng lần phát trên KeyMint TA của thiết bị này, gửi tới Google và cài keybox mới qua trình quản lý Tricky Store mà không hỏi lại. Chỉ hoạt động trên một số thiết bị và chỉ có thể phát chứng chỉ RKP. Nếu bạn cài một keybox khác, gia hạn sẽ dừng. Tiếp tục?",
+    "installFirst": "Hãy cài keybox này qua trình quản lý Tricky Store trước.",
+    "issueFirst": "Phát và cài keybox để bật tự động gia hạn.",
+    "expires": "Hết hạn",
+    "nextAttempt": "Lần thử tiếp theo",
+    "lastRenewed": "Gia hạn gần nhất",
+    "lastError": "Lỗi gần nhất",
+    "runDir": "Thư mục lần chạy",
+    "never": "Chưa có"
+  },
   "confirm": {
     "title": "Gửi yêu cầu tới KeyMint TA?",
     "body": "Thao tác này chạy RKP (V1 / V2) trên ứng dụng tin cậy KeyMint của thiết bị rồi gửi kết quả tới Google. Chỉ chạy trên một số thiết bị và chỉ phát chứng chỉ RKP. Các tệp xuất ra chứa khoá riêng; hãy bảo quản an toàn. Tiếp tục?"
@@ -100,6 +126,13 @@
     "device_not_registered": "Máy chủ RKP không nhận ra thiết bị này.",
     "rkp_client_error": "Máy chủ RKP đã từ chối yêu cầu.",
     "rkp_server_error": "Máy chủ RKP gặp lỗi.",
-    "all_methods_failed": "Tất cả phương thức cấp khả dụng đều thất bại. Hãy xem lỗi của từng lần thử."
+    "all_methods_failed": "Tất cả phương thức cấp khả dụng đều thất bại. Hãy xem lỗi của từng lần thử.",
+    "keybox_not_installed": "Hãy cài keybox này qua trình quản lý Tricky Store trước khi bật gia hạn.",
+    "keybox_changed": "Đã cài một keybox khác nên gia hạn đã dừng.",
+    "renewal_busy": "Một lần gia hạn khác đang chạy. Hãy thử lại sau ít phút.",
+    "renewal_disabled": "Tự động gia hạn chưa được bật.",
+    "keystore_unavailable": "Không thể đọc mô-đun kho khóa hoặc keybox của nó.",
+    "keybox_install_failed": "Không thể cài keybox đã gia hạn.",
+    "invalid_run": "Đây không phải kết quả của Trình phát RKP thiết bị."
   }
 }

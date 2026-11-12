@@ -81,6 +81,32 @@
     "includeFingerprintHint": "Odcisk powinien wskazywać tę samą kompilację firmware co skrót VBMeta w żądaniu TA. Po wyłączeniu nadal jest wysyłany przy pobieraniu challenge.",
     "fingerprintHint": "Pozostaw puste, aby odczytać odcisk urządzenia podczas podpisywania. Podana wartość służy do pobierania challenge i jako metadane CSR."
   },
+  "renewal": {
+    "title": "Automatyczne odnawianie",
+    "description": "Pobiera i instaluje nowy keybox dzień przed wygaśnięciem najwcześniejszego certyfikatu w nim.",
+    "scheduled": "Zaplanowane",
+    "retrying": "Ponawianie",
+    "superseded": "Zatrzymane",
+    "supersededTitle": "Zainstalowano inny keybox",
+    "supersededBody": "Odnawianie zatrzymano, aby nie zastąpić keyboxa zainstalowanego później. Wydaj i zainstaluj nowy keybox, a potem włącz dla niego odnawianie.",
+    "enable": "Odnawiaj automatycznie",
+    "trackThis": "Śledź zamiast tego ten keybox",
+    "disable": "Wyłącz",
+    "renewNow": "Odnów teraz",
+    "enabled": "Automatyczne odnawianie włączone",
+    "disabled": "Automatyczne odnawianie wyłączone",
+    "renewed": "Keybox odnowiony i zainstalowany",
+    "confirmTitle": "Odnawiać ten keybox automatycznie?",
+    "confirmBody": "Dzień przed wygaśnięciem najwcześniejszego certyfikatu Duck ToolBox powtórzy to samo wydanie na KeyMint TA tego urządzenia, wyśle je do Google i zainstaluje nowy keybox przez menedżer Tricky Store, bez ponownego pytania. Działa tylko na niektórych urządzeniach i można wydawać tylko certyfikaty RKP. Jeśli zainstalujesz inny keybox, odnawianie się zatrzyma. Kontynuować?",
+    "installFirst": "Najpierw zainstaluj ten keybox przez menedżer Tricky Store.",
+    "issueFirst": "Wydaj i zainstaluj keybox, aby włączyć automatyczne odnawianie.",
+    "expires": "Wygasa",
+    "nextAttempt": "Następna próba",
+    "lastRenewed": "Ostatnie odnowienie",
+    "lastError": "Ostatni błąd",
+    "runDir": "Katalog uruchomienia",
+    "never": "Jeszcze nie"
+  },
   "confirm": {
     "title": "Wysłać żądanie do KeyMint TA?",
     "body": "Ta operacja uruchamia mechanizm RKP (V1 / V2) w zaufanej aplikacji KeyMint urządzenia i przesyła wynik do Google. Działa to tylko na niektórych urządzeniach i wydaje wyłącznie certyfikaty RKP. Wyeksportowane pliki zawierają klucz prywatny; chroń je. Kontynuować?"
@@ -100,6 +126,13 @@
     "device_not_registered": "Serwer RKP nie rozpoznaje tego urządzenia.",
     "rkp_client_error": "Serwer RKP odrzucił żądanie.",
     "rkp_server_error": "Błąd serwera RKP.",
-    "all_methods_failed": "Wszystkie dostępne metody wydawania nie powiodły się. Przejrzyj błędy dla poszczególnych prób."
+    "all_methods_failed": "Wszystkie dostępne metody wydawania nie powiodły się. Przejrzyj błędy dla poszczególnych prób.",
+    "keybox_not_installed": "Zainstaluj ten keybox przez menedżer Tricky Store przed włączeniem odnawiania.",
+    "keybox_changed": "Zainstalowano inny keybox, więc odnawianie zatrzymano.",
+    "renewal_busy": "Trwa inne odnawianie. Spróbuj ponownie za chwilę.",
+    "renewal_disabled": "Automatyczne odnawianie nie jest włączone.",
+    "keystore_unavailable": "Nie udało się odczytać modułu magazynu kluczy ani jego keyboxa.",
+    "keybox_install_failed": "Nie udało się zainstalować odnowionego keyboxa.",
+    "invalid_run": "To nie jest wynik wydawcy RKP urządzenia."
   }
 }

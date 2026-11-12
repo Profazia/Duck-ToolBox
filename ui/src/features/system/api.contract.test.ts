@@ -23,6 +23,7 @@ describe.skipIf(!hasDuckd)("system API against the real duckd", CONTRACT, () => 
       "integrity-transaction",
       "rkp",
       "rkp-device",
+      "rkp-renewal",
       "tee-attestation",
       "device-ids",
       "tricky-store",

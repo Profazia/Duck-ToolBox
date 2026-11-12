@@ -234,6 +234,7 @@ fn features_manifest_lists_every_registered_tool() {
             "integrity-transaction",
             "rkp",
             "rkp-device",
+            "rkp-renewal",
             "tee-attestation",
             "device-ids",
             "tricky-store",

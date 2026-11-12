@@ -5,6 +5,8 @@
 mod builtin;
 #[cfg(feature = "play-integrity")]
 mod integrity_transaction;
+#[cfg(feature = "rkp-renewal")]
+mod rkp_renewal;
 
 use clap::{Arg, ArgAction, error::ErrorKind};
 use duck_core::{
@@ -20,6 +22,8 @@ static FEATURES: &[&dyn Feature] = &[
     &duck_rkp::FEATURE,
     #[cfg(feature = "rkp-device")]
     &duck_rkp_device::FEATURE,
+    #[cfg(feature = "rkp-renewal")]
+    &rkp_renewal::FEATURE,
     #[cfg(feature = "tee-attestation")]
     &duck_tee_attestation::FEATURE,
     #[cfg(feature = "device-ids")]
@@ -43,7 +47,7 @@ static FEATURES: &[&dyn Feature] = &[
 ];
 
 fn cli() -> clap::Command {
-    let description = if cfg!(feature = "lite") && FEATURES.len() == 3 {
+    let description = if cfg!(feature = "lite") && FEATURES.len() == 4 {
         "Duck ToolBox Lite backend. API subcommands print one JSON envelope."
     } else {
         "Duck ToolBox backend. API subcommands print one JSON envelope; linux-env shell opens an interactive terminal."
@@ -130,11 +134,13 @@ fn emit(ctx: &Context, result: CommandResult) {
         Err(failure) => (envelope::failure(&failure), true),
     };
 
-    // History reads must not mutate the data being paginated.
-    if !matches!(
+    // History reads must not mutate the data being paginated, and periodic background
+    // checks that changed nothing would otherwise fill the log.
+    let quiet = matches!(
         value["command"].as_str(),
         Some("system.log" | "kernel-modules.worker" | "zram.worker" | "linux-env.status")
-    ) {
+    ) || quiet_renewal_check(&value);
+    if !quiet {
         duck_core::log::append(&ctx.paths, &value);
     }
     envelope::emit(&value);
@@ -142,6 +148,18 @@ fn emit(ctx: &Context, result: CommandResult) {
     if failed {
         std::process::exit(1);
     }
+}
+
+#[cfg(feature = "rkp-renewal")]
+fn quiet_renewal_check(envelope: &serde_json::Value) -> bool {
+    envelope["ok"] == true
+        && envelope["command"] == "rkp-renewal.tick"
+        && rkp_renewal::quiet(&envelope["data"])
+}
+
+#[cfg(not(feature = "rkp-renewal"))]
+fn quiet_renewal_check(_envelope: &serde_json::Value) -> bool {
+    false
 }
 
 #[cfg(test)]

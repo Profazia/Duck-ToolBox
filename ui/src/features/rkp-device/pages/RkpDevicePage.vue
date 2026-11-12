@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useMutation, useQuery } from "@tanstack/vue-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { Cpu, FileKey2, RefreshCw, ShieldCheck, TriangleAlert } from "@lucide/vue"
 import { useStorage } from "@vueuse/core"
 import { computed, ref, watch } from "vue"
@@ -31,7 +31,9 @@ import { notifySuccess } from "@/core/notify"
 
 import type { Protocol, Provision } from "../api"
 import { rkpDeviceApi } from "../api"
+import RenewalCard from "../components/RenewalCard.vue"
 import { useRkpDeviceI18n } from "../i18n"
+import { RENEWAL_STATUS_KEY } from "../renewal"
 
 interface Row {
   label: string
@@ -101,6 +103,7 @@ const run = useMutation({
 
 /** The target whose install is running, so only its button shows a spinner. */
 const installingTarget = ref<string | null>(null)
+const queryClient = useQueryClient()
 
 const install = useMutation({
   mutationFn: (target: KeyboxTarget) =>
@@ -110,6 +113,8 @@ const install = useMutation({
   },
   onSettled: () => {
     installingTarget.value = null
+    // A newly installed keybox can replace the one automatic renewal tracks.
+    void queryClient.invalidateQueries({ queryKey: RENEWAL_STATUS_KEY })
   },
   onSuccess: (installed) => {
     if (!installed) return
@@ -361,6 +366,14 @@ const resultRows = computed<Row[]>(() => {
         <AlertDescription>{{ t("run.onlyRkpHint") }}</AlertDescription>
       </Alert>
     </template>
+
+    <RenewalCard
+      v-if="status.data.value"
+      :result="result"
+      :protocol="protocol"
+      :include-fingerprint="includeFingerprint"
+      :fingerprint="fingerprint"
+    />
 
     <ConfirmDialog
       v-model:open="confirmOpen"

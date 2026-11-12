@@ -18,6 +18,7 @@ LITE_SOURCES = (
     "licenses/rkp-v1-oracle.txt",
     "post-fs-data.sh",
     "prop.sh",
+    "rkp-renewal.sh",
     "service.sh",
     "uninstall.sh",
     "util_functions.sh",

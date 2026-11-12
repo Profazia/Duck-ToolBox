@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Remote Key Provisioning
+
+- Add opt-in automatic renewal for an installed Device RKP Issuer keybox. A day before
+  the earliest certificate in the keybox expires, the module repeats the same issuance
+  and installs the result through the Tricky Store manager. Failed renewals keep the
+  current keybox and retry from 1 hour up to 24 hours. Renewal stops, without
+  overwriting anything, as soon as a different keybox is installed.
+- The renewal check runs only while renewal is on. Turning it off removes its state,
+  and each renewal deletes the expired key material of the renewal before it.
+
 ## 0.2.2-Stable - 2026-11-09
 
 ### Lite

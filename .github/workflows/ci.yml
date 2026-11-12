@@ -56,7 +56,7 @@ jobs:
         run: cargo test --workspace --locked
       - name: Every feature builds on its own
         run: |
-          for feature in rkp rkp-device tee-attestation device-ids tricky-store play-integrity device-faker kernel-modules zram linux-env system misc; do
+          for feature in rkp rkp-device rkp-renewal tee-attestation device-ids tricky-store play-integrity device-faker kernel-modules zram linux-env system misc; do
             echo "::group::duckd with only ${feature}"
             cargo check --locked --package duckd --no-default-features --features "${feature}"
             echo "::endgroup::"
@@ -67,7 +67,7 @@ jobs:
           DUCK_TOOLBOX_DATA_ROOT: ${{ runner.temp }}/duck-lite
         run: |
           cargo run --quiet --locked --package duckd --no-default-features --features lite -- features \
-            | jq -e '.ok and ([.data.features[].id] | sort == ["rkp", "rkp-device", "tricky-store"])'
+            | jq -e '.ok and ([.data.features[].id] | sort == ["rkp", "rkp-device", "rkp-renewal", "tricky-store"])'
 
   play-integrity:
     name: Independent Play Integrity engine

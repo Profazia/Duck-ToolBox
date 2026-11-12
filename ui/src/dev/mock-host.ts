@@ -59,9 +59,9 @@ function builtin(label: string): unknown {
       binary_version: "0.1.0-dev",
       api: 1,
       features: modules.flatMap((module) =>
-        module.feature
-          ? [{ id: module.feature.id, summary: "mock", contract: module.feature.contract }]
-          : [],
+        [module.feature ?? []]
+          .flat()
+          .map((feature) => ({ id: feature.id, summary: "mock", contract: feature.contract })),
       ),
     }
   }

@@ -81,6 +81,32 @@
     "includeFingerprintHint": "請確認指紋與 TA 請求中的 VBMeta 摘要對應同一韌體建構。關閉後，取得 challenge 時仍會傳送指紋。",
     "fingerprintHint": "留空時於簽發時讀取裝置指紋；手動指定的值同時用於取得 challenge 與 CSR 中繼資料。"
   },
+  "renewal": {
+    "title": "自動續期",
+    "description": "在 keybox 中最早的憑證到期前一天，申請並安裝新的 keybox。",
+    "scheduled": "已排程",
+    "retrying": "正在重試",
+    "superseded": "已停止",
+    "supersededTitle": "已安裝其他 keybox",
+    "supersededBody": "續期已停止，以免取代之後安裝的 keybox。請簽發並安裝新的 keybox，再為它開啟續期。",
+    "enable": "自動續期",
+    "trackThis": "改為追蹤此 keybox",
+    "disable": "關閉",
+    "renewNow": "立即續期",
+    "enabled": "已開啟自動續期",
+    "disabled": "已關閉自動續期",
+    "renewed": "keybox 已續期並安裝",
+    "confirmTitle": "要自動續期此 keybox 嗎？",
+    "confirmBody": "在最早的憑證到期前一天，Duck ToolBox 會在本裝置的 KeyMint TA 上執行相同的簽發，提交給 Google，並透過 Tricky Store 管理器安裝新的 keybox，不會再次詢問。僅部分裝置可用，且只能簽發 RKP 憑證。如果你安裝了其他 keybox，續期會停止。要繼續嗎？",
+    "installFirst": "請先透過 Tricky Store 管理器安裝此 keybox。",
+    "issueFirst": "簽發並安裝 keybox 後即可開啟自動續期。",
+    "expires": "到期時間",
+    "nextAttempt": "下次嘗試",
+    "lastRenewed": "上次續期",
+    "lastError": "上次錯誤",
+    "runDir": "執行目錄",
+    "never": "尚無"
+  },
   "confirm": {
     "title": "要向 KeyMint TA 傳送請求嗎？",
     "body": "這會在本機 KeyMint 受信任應用程式上執行 RKP (V1 / V2)，並把結果提交給 Google。此功能僅在部分裝置上可用，且只能簽發 RKP 憑證。匯出的檔案包含私密金鑰，請妥善保管。是否繼續？"
@@ -100,6 +126,13 @@
     "device_not_registered": "RKP 伺服器無法辨識此裝置。",
     "rkp_client_error": "RKP 伺服器拒絕了要求。",
     "rkp_server_error": "RKP 伺服器發生錯誤。",
-    "all_methods_failed": "所有可用簽發方式均失敗，請查看每次嘗試的錯誤。"
+    "all_methods_failed": "所有可用簽發方式均失敗，請查看每次嘗試的錯誤。",
+    "keybox_not_installed": "開啟續期前，請先透過 Tricky Store 管理器安裝此 keybox。",
+    "keybox_changed": "已安裝其他 keybox，續期已停止。",
+    "renewal_busy": "另一個續期正在進行，請稍後重試。",
+    "renewal_disabled": "自動續期未開啟。",
+    "keystore_unavailable": "無法讀取金鑰庫模組或其 keybox。",
+    "keybox_install_failed": "無法安裝續期後的 keybox。",
+    "invalid_run": "這不是裝置 RKP 簽發器的結果。"
   }
 }

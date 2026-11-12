@@ -65,6 +65,44 @@ test("asks again before sending a request to the KeyMint TA", async ({ page, ope
   await expect(page.getByText("RKP keybox issued")).toBeVisible()
 })
 
+test("turns on automatic renewal for an issued keybox", async ({ page, open }) => {
+  await page.addInitScript(() =>
+    localStorage.setItem("duck-toolbox/acknowledged", JSON.stringify(["rkp-device"])),
+  )
+  await open("/rkp-device")
+  const card = page.locator("section", { hasText: "Automatic renewal" })
+  await expect(
+    card.getByText("Issue and install a keybox to turn on automatic renewal."),
+  ).toBeVisible()
+
+  await page.getByRole("button", { name: "Issue RKP keybox" }).click()
+  await page.getByRole("alertdialog").getByRole("button", { name: "Issue RKP keybox" }).click()
+  await card.getByRole("button", { name: "Renew automatically" }).click()
+  const confirm = page.getByRole("alertdialog")
+  await expect(confirm.getByText(/without asking again/)).toBeVisible()
+  await confirm.getByRole("button", { name: "Renew automatically" }).click()
+
+  await expect(page.getByText("Automatic renewal is on")).toBeVisible()
+  await expect(card.getByText("Scheduled", { exact: true })).toBeVisible()
+  await expect(card.getByText("Next attempt")).toBeVisible()
+  await card.getByRole("button", { name: "Renew now" }).click()
+  await expect(page.getByText("Keybox renewed and installed")).toBeVisible()
+  await card.getByRole("button", { name: "Turn off" }).click()
+  await expect(page.getByText("Automatic renewal is off")).toBeVisible()
+  await expect(card.getByRole("button", { name: "Renew automatically" })).toBeVisible()
+})
+
+test("explains why renewal stopped after another keybox was installed", async ({ page, open }) => {
+  await page.addInitScript(() =>
+    localStorage.setItem("duck-toolbox/acknowledged", JSON.stringify(["rkp-device"])),
+  )
+  await open("/rkp-device", { query: { renewal: "superseded" } })
+  const card = page.locator("section", { hasText: "Automatic renewal" })
+  await expect(card.getByText("A different keybox is installed")).toBeVisible()
+  await expect(card.getByRole("button", { name: "Renew now" })).toHaveCount(0)
+  await expect(card.getByRole("button", { name: "Turn off" })).toBeVisible()
+})
+
 test("runs a Device ID dry run", async ({ page, open }) => {
   await open("/device-ids")
   await expect(page.getByRole("switch", { name: "Dry run" })).toBeChecked()

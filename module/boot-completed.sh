@@ -39,6 +39,9 @@ if [ -f "$MODPATH/boot-system.sh" ]; then
   . "$MODPATH/boot-system.sh"
 fi
 
+# Automatic RKP keybox renewal, only when a plan was saved; the check exits otherwise.
+sh "$MODPATH/rkp-renewal.sh" boot </dev/null >/dev/null 2>&1 &
+
 # TSupport-Advance rewrites the target list on its own unless this flag exists (as Tricky
 # Addon does). Shared storage appears only after the user unlocks the device.
 tries=0
