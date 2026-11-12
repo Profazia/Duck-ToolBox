@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.3-Stable - 2026-11-12
 
 ### Remote Key Provisioning
 
