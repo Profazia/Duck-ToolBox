@@ -13,7 +13,8 @@ use super::{
 
 /// Runs one Device RKP Issuer provisioning and returns its run directory.
 pub trait Issuer {
-    fn issue<'a>(&'a self, ctx: &'a Context, options: &'a Options) -> BoxFuture<'a, Result<String>>;
+    fn issue<'a>(&'a self, ctx: &'a Context, options: &'a Options)
+    -> BoxFuture<'a, Result<String>>;
 }
 
 /// The active keystore module's keybox.
@@ -161,7 +162,10 @@ pub async fn tick(
 ) -> Result<TickData> {
     let disabled = || {
         if force {
-            return Err(coded("renewal_disabled", "automatic renewal is not enabled"));
+            return Err(coded(
+                "renewal_disabled",
+                "automatic renewal is not enabled",
+            ));
         }
         Ok(TickData {
             action: Action::Disabled,

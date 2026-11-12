@@ -63,7 +63,10 @@ impl Env {
         drop(input);
         let output = child.wait_with_output().unwrap();
         let envelope = serde_json::from_slice(&output.stdout).unwrap_or_else(|error| {
-            panic!("{args:?}: {error}: {}", String::from_utf8_lossy(&output.stdout))
+            panic!(
+                "{args:?}: {error}: {}",
+                String::from_utf8_lossy(&output.stdout)
+            )
         });
         (envelope, output.status.success())
     }
@@ -138,7 +141,10 @@ fn renewal_tracks_the_installed_keybox_and_replays_the_issuer() {
     let enable = ["rkp-renewal", "enable", "--stdin-json"];
     let mut request = enable_request(&run);
     request["acknowledge_limitations"] = json!(false);
-    assert_eq!(env.fails(&enable, Some(&request)), "acknowledgement_required");
+    assert_eq!(
+        env.fails(&enable, Some(&request)),
+        "acknowledgement_required"
+    );
     assert_eq!(
         env.fails(&enable, Some(&enable_request(&run))),
         "keybox_not_installed"
@@ -196,9 +202,15 @@ fn installing_another_keybox_stops_renewal() {
     );
 
     env.ok(&["tricky-store", "keybox", "generate"], None);
-    assert_eq!(env.ok(&["rkp-renewal", "status"], None)["state"], "superseded");
+    assert_eq!(
+        env.ok(&["rkp-renewal", "status"], None)["state"],
+        "superseded"
+    );
     let generated = fs::read(env.installed()).unwrap();
-    assert_eq!(env.ok(&["rkp-renewal", "tick"], None)["action"], "superseded");
+    assert_eq!(
+        env.ok(&["rkp-renewal", "tick"], None)["action"],
+        "superseded"
+    );
     assert_eq!(env.ok(&["rkp-renewal", "tick"], None)["action"], "stopped");
     assert_eq!(
         env.fails(&["rkp-renewal", "tick", "--force"], None),
@@ -239,7 +251,11 @@ fn enabling_starts_one_detached_check_and_turning_off_removes_its_state() {
     let module = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../module");
     for script in ["rkp-renewal.sh", "util_functions.sh", "identity.sh"] {
         let body = fs::read_to_string(module.join(script)).unwrap();
-        fs::write(env.root.join(script), body.replace("    sleep 60", "    sleep 0.2")).unwrap();
+        fs::write(
+            env.root.join(script),
+            body.replace("    sleep 60", "    sleep 0.2"),
+        )
+        .unwrap();
     }
     let ticks = env.root.join("ticks");
     fs::write(
@@ -265,19 +281,28 @@ fn enabling_starts_one_detached_check_and_turning_off_removes_its_state() {
         &["rkp-renewal", "enable", "--stdin-json"],
         Some(&enable_request(&run)),
     );
-    assert!(started.elapsed() < std::time::Duration::from_secs(5), "enable waited on the check");
+    assert!(
+        started.elapsed() < std::time::Duration::from_secs(5),
+        "enable waited on the check"
+    );
     let pid = wait_for(|| fs::read_to_string(state.join("check.pid")).ok());
     // The check ran once right away; renewal is not due, so it waits without renewing.
-    wait_for(|| fs::read_to_string(&ticks).ok().filter(|log| log.contains("rkp-renewal tick")));
+    wait_for(|| {
+        fs::read_to_string(&ticks)
+            .ok()
+            .filter(|log| log.contains("rkp-renewal tick"))
+    });
     assert!(Path::new(&format!("/proc/{}", pid.trim())).exists());
 
     env.ok(&["rkp-renewal", "disable"], None);
     assert!(!state.exists());
-    wait_for(|| (!Path::new(&format!("/proc/{}/cmdline", pid.trim())).exists()
-        || !fs::read_to_string(format!("/proc/{}/cmdline", pid.trim()))
-            .unwrap_or_default()
-            .contains("rkp-renewal.sh"))
-    .then_some(()));
+    wait_for(|| {
+        (!Path::new(&format!("/proc/{}/cmdline", pid.trim())).exists()
+            || !fs::read_to_string(format!("/proc/{}/cmdline", pid.trim()))
+                .unwrap_or_default()
+                .contains("rkp-renewal.sh"))
+        .then_some(())
+    });
     assert!(!state.exists(), "the exiting check recreated state");
 }
 

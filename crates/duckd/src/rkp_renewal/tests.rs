@@ -133,7 +133,11 @@ impl FakeIssuer<'_> {
 }
 
 impl Issuer for FakeIssuer<'_> {
-    fn issue<'a>(&'a self, ctx: &'a Context, options: &'a Options) -> BoxFuture<'a, Result<String>> {
+    fn issue<'a>(
+        &'a self,
+        ctx: &'a Context,
+        options: &'a Options,
+    ) -> BoxFuture<'a, Result<String>> {
         Box::pin(async move {
             self.runs.set(self.runs.get() + 1);
             self.options.borrow_mut().push(options.clone());
@@ -143,7 +147,11 @@ impl Issuer for FakeIssuer<'_> {
             if let Some((keystore, bytes)) = self.replace_during_issue {
                 keystore.replace(bytes);
             }
-            Ok(write_run(ctx, &format!("renewed-{}", self.runs.get()), self.leaf))
+            Ok(write_run(
+                ctx,
+                &format!("renewed-{}", self.runs.get()),
+                self.leaf,
+            ))
         })
     }
 }
@@ -202,7 +210,13 @@ fn enabling_records_the_options_and_renews_a_day_before_expiry() {
     assert_eq!(plan.next_attempt_unix, plan.renew_at_unix);
     assert_eq!(
         plan.keybox_sha256,
-        digest(keystore.installed(&fixture.ctx).unwrap().unwrap().as_slice())
+        digest(
+            keystore
+                .installed(&fixture.ctx)
+                .unwrap()
+                .unwrap()
+                .as_slice()
+        )
     );
     let status = service::status(&fixture.ctx, &keystore).unwrap();
     assert_eq!(status.state, State::Scheduled);
@@ -256,9 +270,15 @@ async fn a_check_before_the_renewal_time_waits() {
     let plan = enabled(&fixture, &keystore);
     let issuer = FakeIssuer::new((2030, 2, 20));
 
-    let tick = service::tick(&fixture.ctx, &issuer, &keystore, plan.renew_at_unix - 1, false)
-        .await
-        .unwrap();
+    let tick = service::tick(
+        &fixture.ctx,
+        &issuer,
+        &keystore,
+        plan.renew_at_unix - 1,
+        false,
+    )
+    .await
+    .unwrap();
     assert_eq!(tick.action, Action::Waiting);
     assert_eq!(issuer.runs.get(), 0);
     assert!(super::quiet(&serde_json::to_value(&tick).unwrap()));
@@ -280,7 +300,7 @@ async fn a_due_check_issues_and_installs_a_new_keybox() {
     assert_eq!(issuer.runs.get(), 1);
 
     // The same options are replayed, and the new keybox is the one tracked and installed.
-    let replayed = &issuer.options.borrow()[0];
+    let replayed = issuer.options.borrow()[0].clone();
     assert_eq!(replayed.protocol, plan.protocol);
     assert_eq!(replayed.fingerprint, plan.fingerprint);
     let renewed = plan::load(&fixture.ctx).unwrap().unwrap();
@@ -367,7 +387,13 @@ async fn failures_keep_the_keybox_and_back_off() {
         .await
         .unwrap();
     assert_eq!(tick.action, Action::Renewed);
-    assert_eq!(plan::load(&fixture.ctx).unwrap().unwrap().consecutive_failures, 0);
+    assert_eq!(
+        plan::load(&fixture.ctx)
+            .unwrap()
+            .unwrap()
+            .consecutive_failures,
+        0
+    );
 }
 
 #[tokio::test]
@@ -387,7 +413,13 @@ async fn an_unreadable_keystore_is_a_failure_only_once_renewal_is_due() {
         .unwrap_err();
     assert_eq!(code_of(&error), "keystore_unavailable");
     assert_eq!(issuer.runs.get(), 0);
-    assert_eq!(plan::load(&fixture.ctx).unwrap().unwrap().consecutive_failures, 1);
+    assert_eq!(
+        plan::load(&fixture.ctx)
+            .unwrap()
+            .unwrap()
+            .consecutive_failures,
+        1
+    );
 }
 
 #[tokio::test]
@@ -412,9 +444,15 @@ async fn a_different_installed_keybox_stops_renewal_without_overwriting_it() {
     assert_eq!(stopped.superseded_at_unix, Some(plan.renew_at_unix));
 
     // Later checks stay quiet, and forcing reports why instead of renewing.
-    let tick = service::tick(&fixture.ctx, &issuer, &keystore, plan.renew_at_unix + 60, false)
-        .await
-        .unwrap();
+    let tick = service::tick(
+        &fixture.ctx,
+        &issuer,
+        &keystore,
+        plan.renew_at_unix + 60,
+        false,
+    )
+    .await
+    .unwrap();
     assert_eq!(tick.action, Action::Stopped);
     assert!(super::quiet(&serde_json::to_value(&tick).unwrap()));
     let error = service::tick(&fixture.ctx, &issuer, &keystore, NOW, true)
@@ -442,7 +480,10 @@ async fn a_keybox_installed_during_issuance_is_kept() {
         .unwrap();
     assert_eq!(tick.action, Action::Superseded);
     assert_eq!(issuer.runs.get(), 1);
-    assert_eq!(keystore.installed(&fixture.ctx).unwrap().as_deref(), Some(MANUAL));
+    assert_eq!(
+        keystore.installed(&fixture.ctx).unwrap().as_deref(),
+        Some(MANUAL)
+    );
 }
 
 #[tokio::test]
@@ -484,21 +525,42 @@ async fn a_held_plan_is_busy_and_disabling_forgets_it() {
             .await
             .unwrap_err();
         assert_eq!(code_of(&error), "renewal_busy");
-        assert_eq!(code_of(&service::disable(&fixture.ctx).unwrap_err()), "renewal_busy");
+        assert_eq!(
+            code_of(&service::disable(&fixture.ctx).unwrap_err()),
+            "renewal_busy"
+        );
     }
     let status = service::disable(&fixture.ctx).unwrap();
     assert_eq!(status.state, State::Off);
     assert!(plan::load(&fixture.ctx).unwrap().is_none());
     // The issued keybox stays where it was.
-    assert!(fixture.ctx.paths.outputs_dir.join("rkp-device-1/keybox.xml").is_file());
+    assert!(
+        fixture
+            .ctx
+            .paths
+            .outputs_dir
+            .join("rkp-device-1/keybox.xml")
+            .is_file()
+    );
 }
 
 #[test]
 fn renewal_replays_the_issuer_cli_contract() {
     use duck_core::Feature as _;
-    assert_eq!(duck_rkp_device::FEATURE.info().contract, super::ISSUER_CONTRACT);
-    for protocol in [Protocol::Auto, Protocol::V1, Protocol::V2, Protocol::V1Native] {
-        for fingerprint in [None, Some("vendor/device:16/ID/1:user/release-keys".to_owned())] {
+    assert_eq!(
+        duck_rkp_device::FEATURE.info().contract,
+        super::ISSUER_CONTRACT
+    );
+    for protocol in [
+        Protocol::Auto,
+        Protocol::V1,
+        Protocol::V2,
+        Protocol::V1Native,
+    ] {
+        for fingerprint in [
+            None,
+            Some("vendor/device:16/ID/1:user/release-keys".to_owned()),
+        ] {
             let args = provision_args(&Options {
                 protocol,
                 include_fingerprint: fingerprint.is_some(),

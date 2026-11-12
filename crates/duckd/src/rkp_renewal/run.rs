@@ -37,9 +37,8 @@ fn issuer_run_dir(ctx: &Context, run_dir: &str) -> Result<PathBuf> {
     let requested = ctx.paths.resolve_in_root(run_dir.trim());
     let dir = fs::canonicalize(&requested)
         .map_err(|error| invalid(format!("{}: {error}", requested.display())))?;
-    let outputs = fs::canonicalize(&ctx.paths.outputs_dir).map_err(|error| {
-        invalid(format!("{}: {error}", ctx.paths.outputs_dir.display()))
-    })?;
+    let outputs = fs::canonicalize(&ctx.paths.outputs_dir)
+        .map_err(|error| invalid(format!("{}: {error}", ctx.paths.outputs_dir.display())))?;
     let is_issuer_run = dir.parent() == Some(outputs.as_path())
         && dir
             .file_name()
@@ -59,8 +58,8 @@ pub fn load(ctx: &Context, run_dir: &str) -> Result<Run> {
     let dir = issuer_run_dir(ctx, run_dir)?;
 
     let keybox = read(&dir.join("keybox.xml"))?;
-    let keybox = String::from_utf8(keybox)
-        .map_err(|_| invalid("keybox.xml is not UTF-8 text".into()))?;
+    let keybox =
+        String::from_utf8(keybox).map_err(|_| invalid("keybox.xml is not UTF-8 text".into()))?;
     let keybox_xml = duck_tricky_store::keybox::validate::clean(&keybox)
         .map_err(|error| invalid(format!("keybox.xml: {error:#}")))?;
     let chain = read(&dir.join("cert_chain.der"))?;
@@ -90,8 +89,8 @@ pub fn earliest_not_after(der: &[u8]) -> Result<u64> {
     let mut reader = SliceReader::new(der).map_err(|error| anyhow!("{error}"))?;
     let mut earliest: Option<u64> = None;
     while !reader.is_finished() {
-        let certificate =
-            Certificate::decode(&mut reader).map_err(|error| anyhow!("parse certificate: {error}"))?;
+        let certificate = Certificate::decode(&mut reader)
+            .map_err(|error| anyhow!("parse certificate: {error}"))?;
         let not_after = certificate
             .tbs_certificate()
             .validity()

@@ -119,9 +119,7 @@ impl Plan {
         self.keybox_sha256 = keybox_sha256;
         self.not_after_unix = not_after;
         self.renew_at_unix = renew_at(not_after);
-        self.next_attempt_unix = self
-            .renew_at_unix
-            .max(now.saturating_add(MIN_REISSUE_SECS));
+        self.next_attempt_unix = self.renew_at_unix.max(now.saturating_add(MIN_REISSUE_SECS));
         self.last_renewed_at_unix = Some(now);
         self.last_attempt = Some(Attempt {
             at_unix: now,
@@ -247,7 +245,6 @@ impl Store {
     /// Removes the plan and every other file this feature keeps, lock included. The
     /// background check notices the missing plan and exits on its own.
     pub fn remove_all(self) -> Result<()> {
-        fs::remove_dir_all(&self.dir)
-            .with_context(|| format!("remove {}", self.dir.display()))
+        fs::remove_dir_all(&self.dir).with_context(|| format!("remove {}", self.dir.display()))
     }
 }

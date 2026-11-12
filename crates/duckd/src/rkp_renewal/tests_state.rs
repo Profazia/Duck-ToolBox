@@ -47,7 +47,8 @@ async fn without_a_plan_nothing_is_written() {
     service::enable(&fixture.ctx, &keystore, request(&run), NOW).unwrap_err();
     let mut expected = before;
     expected.extend(
-        ["", "/cert_chain.der", "/keybox.xml"].map(|file| format!("var/outputs/rkp-device-1{file}")),
+        ["", "/cert_chain.der", "/keybox.xml"]
+            .map(|file| format!("var/outputs/rkp-device-1{file}")),
     );
     expected.sort();
     assert_eq!(tree(&fixture.ctx), expected);
